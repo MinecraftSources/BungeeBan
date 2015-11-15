@@ -760,13 +760,43 @@ public class BungeeBan {
 				}
 				target.disconnect(msg);
 			}
-			// Broadcasting ban to staff members
-			for (ProxiedPlayer staff : BungeeCord.getInstance().getPlayers()) {
-				if (staff.hasPermission("BungeeBan.Ban.Broadcast")) {
-					for (String message : FileManager.getBanBroadcastMessage(uuid)) {
-						staff.sendMessage(Main.getPrefix() + message);
-					}
+		}
+	}
+
+	/**
+	 * Bans a player with a given uuid, time in seconds reason and someone who
+	 * banned
+	 * 
+	 * @param UUID
+	 *            of the player, who banned the player as a string, The amount
+	 *            of time in seconds as a long and a reason as the string.
+	 */
+	@SuppressWarnings("deprecation")
+	public static void banPlayer(String ip, String bannedBy, String banReason, long seconds) {
+		if (!isBanned(ip)) {
+			// Calculating ban end
+			long end = seconds;
+			if (end != -1L) {
+				end = System.currentTimeMillis() + (seconds * 1000);
+			}
+			// MySQL Insertion
+			Main.getMysql()
+					.update("INSERT INTO " + tablePrefix + "IPBans(IP, BanReason, BannedOn, BanEnd, BannedBy) VALUES('"
+							+ ip.toString() + "', '" + banReason + "', '" + System.currentTimeMillis() + "', '" + end
+							+ "', '" + bannedBy + "')");
+			// Kicking player if online
+			ProxiedPlayer target = null;
+			for (ProxiedPlayer onl : BungeeCord.getInstance().getPlayers()) {
+				if (onl.getAddress().getAddress().toString().equalsIgnoreCase(ip)) {
+					target = onl;
 				}
+			}
+			if (target != null) {
+				String msg = "";
+				for (String data : FileManager.getBanKickMessage(ip)) {
+					msg = msg + "\n" + data;
+				}
+				target.disconnect(msg);
 			}
 		}
 	}
