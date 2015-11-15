@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.UUID;
 
 import de.VinciDev.BungeeBan.Main;
+import de.VinciDev.BungeeBan.Events.BungeeBanEvent;
+import de.VinciDev.BungeeBan.Events.BungeeBanIpEvent;
 import de.VinciDev.BungeeBan.Events.BungeeReportEvent;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -760,6 +762,9 @@ public class BungeeBan {
 				}
 				target.disconnect(msg);
 			}
+			// Calling the event
+			BungeeCord.getInstance().getPluginManager()
+					.callEvent(new BungeeBanEvent(uuid, bannedBy, banReason, seconds));
 		}
 	}
 
@@ -767,7 +772,7 @@ public class BungeeBan {
 	 * Bans a player with a given uuid, time in seconds reason and someone who
 	 * banned
 	 * 
-	 * @param UUID
+	 * @param IP
 	 *            of the player, who banned the player as a string, The amount
 	 *            of time in seconds as a long and a reason as the string.
 	 */
@@ -798,6 +803,9 @@ public class BungeeBan {
 				}
 				target.disconnect(msg);
 			}
+			// Call the event
+			BungeeCord.getInstance().getPluginManager()
+					.callEvent(new BungeeBanIpEvent(ip, bannedBy, banReason, seconds));
 		}
 	}
 }
