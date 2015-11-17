@@ -1,0 +1,16 @@
+name: BungeeCord
+version: 2.7
+author: [VinciDev]
+main: de.VinciDev.BungeeBan.Main
+commands:
+  ban:
+  banip:
+  ban-ip:
+  banlist:
+  unban:
+  mute:
+  muteip:
+  mute-ip:
+  mutelist:
+  unmute:
+  check:
