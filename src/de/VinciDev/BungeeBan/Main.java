@@ -71,6 +71,7 @@ public class Main extends Plugin {
 	@Override
 	public void onDisable() {
 		mysql.closeConnection();
+		log("§9Disableing BungeeBan.");
 	}
 
 	public void register() {

@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import de.VinciDev.BungeeBan.Main;
+import net.md_5.bungee.BungeeCord;
+
 public class MySQL {
 	private String host = "";
 	private int port;
@@ -50,15 +53,21 @@ public class MySQL {
 
 	public void update(String query) {
 		if (isConnected()) {
-			try {
-				PreparedStatement pst = this.conn.prepareStatement(query);
-				pst.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			BungeeCord.getInstance().getScheduler().runAsync(Main.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					try {
+						PreparedStatement pst = conn.prepareStatement(query);
+						pst.executeUpdate();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 	}
 
+	// Deprecated. New asynchronous method will follow.
 	public ResultSet getResult(String query) {
 		if (isConnected()) {
 			try {
