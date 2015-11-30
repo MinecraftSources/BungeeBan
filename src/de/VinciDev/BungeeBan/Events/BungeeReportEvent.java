@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Events;
+package de.vincidev.bungeeban.events;
 
 import java.util.UUID;
 

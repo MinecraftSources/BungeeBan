@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Util;
+package de.vincidev.bungeeban.util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,10 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import de.VinciDev.BungeeBan.Main;
-import de.VinciDev.BungeeBan.Events.BungeeBanEvent;
-import de.VinciDev.BungeeBan.Events.BungeeBanIpEvent;
-import de.VinciDev.BungeeBan.Events.BungeeReportEvent;
+import de.vincidev.bungeeban.Main;
+import de.vincidev.bungeeban.events.BungeeBanEvent;
+import de.vincidev.bungeeban.events.BungeeBanIpEvent;
+import de.vincidev.bungeeban.events.BungeeReportEvent;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

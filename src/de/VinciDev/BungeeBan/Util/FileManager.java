@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Util;
+package de.vincidev.bungeeban.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.VinciDev.BungeeBan.Main;
+import de.vincidev.bungeeban.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;

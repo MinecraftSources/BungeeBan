@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Util;
+package de.vincidev.bungeeban.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import de.VinciDev.BungeeBan.Main;
+import de.vincidev.bungeeban.Main;
 
 public class UpdateChecker {
 	public static boolean updateAvailable(Main instance, String rsID) {

@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Util;
+package de.vincidev.bungeeban.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.VinciDev.BungeeBan.Main;
+import de.vincidev.bungeeban.Main;
 import net.md_5.bungee.BungeeCord;
 
 public class MySQL {

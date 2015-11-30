@@ -1,15 +1,16 @@
-package de.VinciDev.BungeeBan;
+package de.vincidev.bungeeban;
 
 import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import de.VinciDev.BungeeBan.Handlers.PlayerConnect;
-import de.VinciDev.BungeeBan.Metrics.Metrics;
-import de.VinciDev.BungeeBan.Util.BungeeBan;
-import de.VinciDev.BungeeBan.Util.FileManager;
-import de.VinciDev.BungeeBan.Util.MySQL;
-import de.VinciDev.BungeeBan.Util.UpdateChecker;
+import de.vincidev.bungeeban.handlers.BroadcastHandlers;
+import de.vincidev.bungeeban.handlers.PlayerConnect;
+import de.vincidev.bungeeban.metrics.Metrics;
+import de.vincidev.bungeeban.util.BungeeBan;
+import de.vincidev.bungeeban.util.FileManager;
+import de.vincidev.bungeeban.util.MySQL;
+import de.vincidev.bungeeban.util.UpdateChecker;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -77,6 +78,7 @@ public class Main extends Plugin {
 	public void register() {
 		PluginManager pm = BungeeCord.getInstance().getPluginManager();
 		pm.registerListener(this, new PlayerConnect());
+		pm.registerListener(this, new BroadcastHandlers());
 	}
 
 	@SuppressWarnings("deprecation")

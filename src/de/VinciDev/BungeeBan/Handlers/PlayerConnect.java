@@ -1,6 +1,6 @@
-package de.VinciDev.BungeeBan.Handlers;
+package de.vincidev.bungeeban.handlers;
 
-import de.VinciDev.BungeeBan.Util.BungeeBan;
+import de.vincidev.bungeeban.util.BungeeBan;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;

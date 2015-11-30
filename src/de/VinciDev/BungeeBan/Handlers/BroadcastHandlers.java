@@ -1,15 +1,15 @@
-package de.VinciDev.BungeeBan.Handlers;
+package de.vincidev.bungeeban.handlers;
 
-import de.VinciDev.BungeeBan.Events.BungeeBanEvent;
-import de.VinciDev.BungeeBan.Events.BungeeBanIpEvent;
-import de.VinciDev.BungeeBan.Events.BungeeKickEvent;
-import de.VinciDev.BungeeBan.Events.BungeeMuteEvent;
-import de.VinciDev.BungeeBan.Events.BungeeMuteIpEvent;
-import de.VinciDev.BungeeBan.Events.BungeeReportEvent;
-import de.VinciDev.BungeeBan.Events.BungeeUnbanEvent;
-import de.VinciDev.BungeeBan.Events.BungeeUnmuteEvent;
-import de.VinciDev.BungeeBan.Events.BungeeUnwarnEvent;
-import de.VinciDev.BungeeBan.Events.BungeeWarnEvent;
+import de.vincidev.bungeeban.events.BungeeBanEvent;
+import de.vincidev.bungeeban.events.BungeeBanIpEvent;
+import de.vincidev.bungeeban.events.BungeeKickEvent;
+import de.vincidev.bungeeban.events.BungeeMuteEvent;
+import de.vincidev.bungeeban.events.BungeeMuteIpEvent;
+import de.vincidev.bungeeban.events.BungeeReportEvent;
+import de.vincidev.bungeeban.events.BungeeUnbanEvent;
+import de.vincidev.bungeeban.events.BungeeUnmuteEvent;
+import de.vincidev.bungeeban.events.BungeeUnwarnEvent;
+import de.vincidev.bungeeban.events.BungeeWarnEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 

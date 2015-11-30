@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Events;
+package de.vincidev.bungeeban.events;
 
 import net.md_5.bungee.api.plugin.Event;
 
