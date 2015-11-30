@@ -1,7 +1,7 @@
-name: BungeeCord
+name: BungeeBan
 version: 2.7
 author: [VinciDev]
-main: de.VinciDev.BungeeBan.Main
+main: de.vincidev.bungeeban.Main
 commands:
   ban:
   banip:
