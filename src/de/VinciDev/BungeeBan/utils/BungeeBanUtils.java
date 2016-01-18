@@ -1,4 +1,4 @@
-package de.vincidev.bungeeban.util;
+package de.vincidev.bungeeban.utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import de.vincidev.bungeeban.Main;
+import de.vincidev.bungeeban.BungeeBan;
 import de.vincidev.bungeeban.events.BungeeBanEvent;
 import de.vincidev.bungeeban.events.BungeeBanIpEvent;
 import de.vincidev.bungeeban.events.BungeeReportEvent;
@@ -25,7 +25,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
  *              API. If you need help using this class and its implemented
  *              methods, don't hesitate to contact VinciDev in Skype.
  */
-public class BungeeBan {
+public class BungeeBanUtils {
 
 	public static final String tablePrefix = "BungeeBan_";
 
@@ -33,18 +33,18 @@ public class BungeeBan {
 	 * Creates the tables in the MySQL database in case they didn't exist yet.
 	 */
 	public static void createTables() {
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
 				+ "PlayerCache(Playername VARCHAR(16), UUID VARCHAR(100), FirstOnline LONG, LastOnline LONG, LastIP VARCHAR(100))");
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
 				+ "Bans(UUID VARCHAR(100), BanReason VARCHAR(256), BannedOn LONG, BanEnd LONG, BannedBy VARCHAR(100))");
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
 				+ "IPBans(IP VARCHAR(100), BanReason VARCHAR(256), BannedOn LONG, BanEnd LONG, BannedBy VARCHAR(100))");
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
 				+ "Mutes(UUID VARCHAR(100), MuteReason VARCHAR(256), MutedOn LONG, MuteEnd LONG, MutedBy VARCHAR(100))");
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix
 				+ "IPMutes(IP VARCHAR(100), MuteReason VARCHAR(256), MutedOn LONG, MuteEnd LONG, MutedBy VARCHAR(100))");
-		Main.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix + "Warns(UUID VARCHAR(100), WarnLevel INT)");
-		Main.getMysql()
+		BungeeBan.getMysql().update("CREATE TABLE IF NOT EXISTS " + tablePrefix + "Warns(UUID VARCHAR(100), WarnLevel INT)");
+		BungeeBan.getMysql()
 				.update("CREATE TABLE IF NOT EXISTS " + tablePrefix + "Logs(Date VARCHAR(100), Message VARCHAR(1024))");
 	}
 
@@ -56,7 +56,7 @@ public class BungeeBan {
 	 * @return nothing
 	 */
 	public static void report(UUID reported, UUID reportedBy, String reason, String servername) {
-		Main.getInstance().getProxy().getPluginManager()
+		BungeeBan.getInstance().getProxy().getPluginManager()
 				.callEvent(new BungeeReportEvent(reported, reportedBy, reason, servername));
 	}
 
@@ -68,17 +68,17 @@ public class BungeeBan {
 	 *            the Player who should be pushed
 	 */
 	public static void pushPlayer(ProxiedPlayer p) {
-		ResultSet rs = Main.getMysql().getResult(
+		ResultSet rs = BungeeBan.getMysql().getResult(
 				"SELECT * FROM " + tablePrefix + "PlayerCache WHERE UUID='" + p.getUniqueId().toString() + "'");
 		try {
 			if (rs.next()) {
-				Main.getMysql()
+				BungeeBan.getMysql()
 						.update("UPDATE " + tablePrefix + "PlayerCache SET Playername='" + p.getName()
 								+ "', LastOnline='" + System.currentTimeMillis() + "', LastIP='"
 								+ p.getAddress().getAddress().getHostAddress() + "' WHERE UUID='"
 								+ p.getUniqueId().toString() + "'");
 			} else {
-				Main.getMysql().update("INSERT INTO " + tablePrefix
+				BungeeBan.getMysql().update("INSERT INTO " + tablePrefix
 						+ "PlayerCache(Playername, UUID, FirstOnline, LastOnline, LastIP) VALUES('" + p.getName()
 						+ "', '" + p.getUniqueId().toString() + "', '" + System.currentTimeMillis() + "', '"
 						+ System.currentTimeMillis() + "', '" + p.getAddress().getAddress().getHostAddress() + "')");
@@ -97,8 +97,8 @@ public class BungeeBan {
 	 *         "null" if he doesn't.
 	 */
 	public static UUID getUniqueID(String playername) {
-		ResultSet rs = Main.getMysql()
-				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE Playername='" + playername + "'");
+		ResultSet rs = BungeeBan.getMysql()
+				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE Playername like '" + playername + "'");
 		try {
 			if (rs.next()) {
 				return UUID.fromString(rs.getString("UUID"));
@@ -118,7 +118,7 @@ public class BungeeBan {
 	 *         he doesn't.
 	 */
 	public static String getPlayername(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -156,7 +156,7 @@ public class BungeeBan {
 	 *         exists, or "0" if he doesn't.
 	 */
 	public static long firstOnline(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -178,7 +178,7 @@ public class BungeeBan {
 	 *         exists, or "0" if he doesn't.
 	 */
 	public static long lastOnline(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -200,7 +200,7 @@ public class BungeeBan {
 	 *         exists, or "0" if he doesn't.
 	 */
 	public static String getLastIp(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "PlayerCache WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -220,7 +220,7 @@ public class BungeeBan {
 	 * @return true if the player is banned, false if the player is not banned.
 	 */
 	public static boolean isBanned(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Bans WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -240,7 +240,7 @@ public class BungeeBan {
 	 * @return true if the player is banned, false if the player is not banned.
 	 */
 	public static boolean isBanned(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return true;
@@ -259,7 +259,7 @@ public class BungeeBan {
 	 * @return true if the player is muted, false if the player is not muted.
 	 */
 	public static boolean isMuted(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Mutes WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -279,7 +279,7 @@ public class BungeeBan {
 	 * @return true if the IP is muted, false if the IP is not muted.
 	 */
 	public static boolean isMuted(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return true;
@@ -298,7 +298,7 @@ public class BungeeBan {
 	 * @return true if the player is warned, false if the player is not warned.
 	 */
 	public static boolean isWarned(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Warns WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -319,7 +319,7 @@ public class BungeeBan {
 	 *         is not banned
 	 */
 	public static String getBanReason(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Bans WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -340,7 +340,7 @@ public class BungeeBan {
 	 *         banned
 	 */
 	public static String getBanReason(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getString("BanReason");
@@ -360,7 +360,7 @@ public class BungeeBan {
 	 *         is not muted
 	 */
 	public static String getMuteReason(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Mutes WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -381,7 +381,7 @@ public class BungeeBan {
 	 *         muted
 	 */
 	public static String getMuteReason(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getString("MuteReason");
@@ -402,7 +402,7 @@ public class BungeeBan {
 	 *         if the player is not banned
 	 */
 	public static String getWhoBanned(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Bans WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -423,7 +423,7 @@ public class BungeeBan {
 	 *         the IP is not banned
 	 */
 	public static String getWhoBanned(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getString("BannedBy");
@@ -444,7 +444,7 @@ public class BungeeBan {
 	 *         if the player is not muted
 	 */
 	public static String getWhoMuted(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Mutes WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -465,7 +465,7 @@ public class BungeeBan {
 	 *         the IP is not muted
 	 */
 	public static String getWhoMuted(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getString("MutedBy");
@@ -484,7 +484,7 @@ public class BungeeBan {
 	 * @return The time when the player has been banned and 0 if he isnt banned
 	 */
 	public static long getBannedOn(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Bans WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -504,7 +504,7 @@ public class BungeeBan {
 	 * @return The time when the IP has been banned and 0 if it isnt banned
 	 */
 	public static long getBannedOn(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getLong("BannedOn");
@@ -523,7 +523,7 @@ public class BungeeBan {
 	 * @return The time when the player has been muted and 0 if he isnt muted
 	 */
 	public static long getMutedOn(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Mutes WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -543,7 +543,7 @@ public class BungeeBan {
 	 * @return The time when the IP has been muted and 0 if it isnt muted
 	 */
 	public static long getMutedOn(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getLong("MutedOn");
@@ -563,7 +563,7 @@ public class BungeeBan {
 	 *         -1 if he is permanently banned
 	 */
 	public static long getBanEnd(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Bans WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -584,7 +584,7 @@ public class BungeeBan {
 	 *         if he is permanently muted
 	 */
 	public static long getMuteEnd(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE UUID='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPMutes WHERE UUID='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getLong("MuteEnd");
@@ -604,7 +604,7 @@ public class BungeeBan {
 	 *         if he is permanently muted
 	 */
 	public static long getMuteEnd(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Mutes WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -625,7 +625,7 @@ public class BungeeBan {
 	 *         if he is permanently banned
 	 */
 	public static long getBanEnd(String ip) {
-		ResultSet rs = Main.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
+		ResultSet rs = BungeeBan.getMysql().getResult("SELECT * FROM " + tablePrefix + "IPBans WHERE IP='" + ip + "'");
 		try {
 			if (rs.next()) {
 				return rs.getLong("BanEnd");
@@ -645,8 +645,8 @@ public class BungeeBan {
 	public static void log(String message) {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		if (Main.getMysql() != null) {
-			Main.getMysql().update("INSERT INTO " + tablePrefix + "Logs(Date, Message) VALUES('"
+		if (BungeeBan.getMysql() != null) {
+			BungeeBan.getMysql().update("INSERT INTO " + tablePrefix + "Logs(Date, Message) VALUES('"
 					+ dateFormat.format(date) + "', '" + message + "')");
 		}
 	}
@@ -660,7 +660,7 @@ public class BungeeBan {
 	 *         and -1 if he hasn't.
 	 */
 	public static int getWarnLevel(UUID uuid) {
-		ResultSet rs = Main.getMysql()
+		ResultSet rs = BungeeBan.getMysql()
 				.getResult("SELECT * FROM " + tablePrefix + "Warns WHERE UUID='" + uuid.toString() + "'");
 		try {
 			if (rs.next()) {
@@ -681,10 +681,10 @@ public class BungeeBan {
 	 */
 	public static void setWarnLevel(UUID uuid, int warnlevel) {
 		if (getWarnLevel(uuid) != -1) {
-			Main.getMysql().update("UPDATE " + tablePrefix + "Warns SET WarnLevel='" + warnlevel + "' WHERE UUID='"
+			BungeeBan.getMysql().update("UPDATE " + tablePrefix + "Warns SET WarnLevel='" + warnlevel + "' WHERE UUID='"
 					+ uuid.toString() + "'");
 		} else {
-			Main.getMysql().update("INSERT INTO " + tablePrefix + "Warns(UUID, WarnLevel) VALUES('" + uuid.toString()
+			BungeeBan.getMysql().update("INSERT INTO " + tablePrefix + "Warns(UUID, WarnLevel) VALUES('" + uuid.toString()
 					+ "', '" + warnlevel + "')");
 		}
 	}
@@ -749,7 +749,7 @@ public class BungeeBan {
 				end = System.currentTimeMillis() + (seconds * 1000);
 			}
 			// MySQL Insertion
-			Main.getMysql()
+			BungeeBan.getMysql()
 					.update("INSERT INTO " + tablePrefix + "Bans(UUID, BanReason, BannedOn, BanEnd, BannedBy) VALUES('"
 							+ uuid.toString() + "', '" + banReason + "', '" + System.currentTimeMillis() + "', '" + end
 							+ "', '" + bannedBy + "')");
@@ -785,7 +785,7 @@ public class BungeeBan {
 				end = System.currentTimeMillis() + (seconds * 1000);
 			}
 			// MySQL Insertion
-			Main.getMysql()
+			BungeeBan.getMysql()
 					.update("INSERT INTO " + tablePrefix + "IPBans(IP, BanReason, BannedOn, BanEnd, BannedBy) VALUES('"
 							+ ip.toString() + "', '" + banReason + "', '" + System.currentTimeMillis() + "', '" + end
 							+ "', '" + bannedBy + "')");

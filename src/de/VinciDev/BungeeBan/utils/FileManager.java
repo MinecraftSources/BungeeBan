@@ -1,4 +1,4 @@
-package de.vincidev.bungeeban.util;
+package de.vincidev.bungeeban.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.vincidev.bungeeban.Main;
+import de.vincidev.bungeeban.BungeeBan;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -19,10 +19,10 @@ public class FileManager {
 	public static Configuration LanguageConfiguration;
 
 	public static void loadFiles() {
-		if (!Main.getInstance().getDataFolder().exists()) {
-			Main.getInstance().getDataFolder().mkdir();
+		if (!BungeeBan.getInstance().getDataFolder().exists()) {
+			BungeeBan.getInstance().getDataFolder().mkdir();
 		}
-		ConfigFile = new File(Main.getInstance().getDataFolder().getPath(), "config.yml");
+		ConfigFile = new File(BungeeBan.getInstance().getDataFolder().getPath(), "config.yml");
 		if (!ConfigFile.exists()) {
 			try {
 				ConfigFile.createNewFile();
@@ -35,7 +35,7 @@ public class FileManager {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		LanguageFile = new File(Main.getInstance().getDataFolder().getPath(), "lang.yml");
+		LanguageFile = new File(BungeeBan.getInstance().getDataFolder().getPath(), "lang.yml");
 		if (!LanguageFile.exists()) {
 			try {
 				LanguageFile.createNewFile();
@@ -54,9 +54,9 @@ public class FileManager {
 		if (ConfigConfiguration.get("MySQL") == null) {
 			ConfigConfiguration.set("MySQL.Hostname", "127.0.0.1");
 			ConfigConfiguration.set("MySQL.Port", 3306);
-			ConfigConfiguration.set("MySQL.Username", "bungeeban");
+			ConfigConfiguration.set("MySQL.Username", "BungeeBanUtils");
 			ConfigConfiguration.set("MySQL.Password", "walrus");
-			ConfigConfiguration.set("MySQL.Database", "bungeeban");
+			ConfigConfiguration.set("MySQL.Database", "BungeeBanUtils");
 			ConfigConfiguration.set("WebPanel.Username", "admin");
 			ConfigConfiguration.set("WebPanel.Password", "admin");
 			ConfigConfiguration.set("Report.CoolDownActivated", true);
@@ -79,14 +79,14 @@ public class FileManager {
 		String username = ConfigConfiguration.getString("MySQL.Username");
 		String password = ConfigConfiguration.getString("MySQL.Password");
 		String database = ConfigConfiguration.getString("MySQL.Database");
-		Main.setMysql(new MySQL(hostname, port, username, password, database));
+		BungeeBan.setMysql(new MySQL(hostname, port, username, password, database));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void createLangFile() {
 		if (LanguageConfiguration.get("Prefix") == null) {
 			// Prefixes
-			LanguageConfiguration.set("Prefix", "&8[&cBungeeBan&8] ");
+			LanguageConfiguration.set("Prefix", "&8[&cBungeeBanUtils&8] ");
 			// Errors
 			LanguageConfiguration.set("Messages.NoPermissions", "&cYou are not allowed to use this.");
 			LanguageConfiguration.set("Messages.Cooldown", "&cPlease wait a bit before using this again.");
@@ -195,11 +195,11 @@ public class FileManager {
 
 	public static List<String> getBanKickMessage(UUID uuid) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(uuid)) {
-			String playername = BungeeBan.getPlayername(uuid);
-			String reason = BungeeBan.getBanReason(uuid);
-			String by = BungeeBan.getWhoBanned(uuid);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getBanEnd(uuid));
+		if (BungeeBanUtils.isBanned(uuid)) {
+			String playername = BungeeBanUtils.getPlayername(uuid);
+			String reason = BungeeBanUtils.getBanReason(uuid);
+			String by = BungeeBanUtils.getWhoBanned(uuid);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getBanEnd(uuid));
 			messages = LanguageConfiguration.getStringList("Messages.Ban.Kick");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);
@@ -214,11 +214,11 @@ public class FileManager {
 
 	public static List<String> getBanBroadcastMessage(UUID uuid) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(uuid)) {
-			String playername = BungeeBan.getPlayername(uuid);
-			String reason = BungeeBan.getBanReason(uuid);
-			String by = BungeeBan.getWhoBanned(uuid);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getBanEnd(uuid));
+		if (BungeeBanUtils.isBanned(uuid)) {
+			String playername = BungeeBanUtils.getPlayername(uuid);
+			String reason = BungeeBanUtils.getBanReason(uuid);
+			String by = BungeeBanUtils.getWhoBanned(uuid);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getBanEnd(uuid));
 			messages = LanguageConfiguration.getStringList("Messages.Ban.Broadcast");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);
@@ -233,10 +233,10 @@ public class FileManager {
 
 	public static List<String> getBanBroadcastMessage(String ip) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(ip)) {
-			String reason = BungeeBan.getBanReason(ip);
-			String by = BungeeBan.getWhoBanned(ip);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getBanEnd(ip));
+		if (BungeeBanUtils.isBanned(ip)) {
+			String reason = BungeeBanUtils.getBanReason(ip);
+			String by = BungeeBanUtils.getWhoBanned(ip);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getBanEnd(ip));
 			messages = LanguageConfiguration.getStringList("Messages.Ban.Broadcast");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);
@@ -251,10 +251,10 @@ public class FileManager {
 
 	public static List<String> getBanKickMessage(String ip) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(ip)) {
-			String reason = BungeeBan.getBanReason(ip);
-			String by = BungeeBan.getWhoBanned(ip);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getBanEnd(ip));
+		if (BungeeBanUtils.isBanned(ip)) {
+			String reason = BungeeBanUtils.getBanReason(ip);
+			String by = BungeeBanUtils.getWhoBanned(ip);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getBanEnd(ip));
 			messages = LanguageConfiguration.getStringList("Messages.Ban.Kick");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);
@@ -268,11 +268,11 @@ public class FileManager {
 
 	public static List<String> getMuteKickMessage(UUID uuid) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(uuid)) {
-			String playername = BungeeBan.getPlayername(uuid);
-			String reason = BungeeBan.getMuteReason(uuid);
-			String by = BungeeBan.getWhoMuted(uuid);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getMuteEnd(uuid));
+		if (BungeeBanUtils.isBanned(uuid)) {
+			String playername = BungeeBanUtils.getPlayername(uuid);
+			String reason = BungeeBanUtils.getMuteReason(uuid);
+			String by = BungeeBanUtils.getWhoMuted(uuid);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getMuteEnd(uuid));
 			messages = LanguageConfiguration.getStringList("Messages.Mute.MuteMessage");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);
@@ -287,10 +287,10 @@ public class FileManager {
 
 	public static List<String> getMuteKickMessage(String ip) {
 		List<String> messages = new ArrayList<>();
-		if (BungeeBan.isBanned(ip)) {
-			String reason = BungeeBan.getMuteReason(ip);
-			String by = BungeeBan.getWhoMuted(ip);
-			String end = BungeeBan.getRemainingTime(BungeeBan.getMuteEnd(ip));
+		if (BungeeBanUtils.isBanned(ip)) {
+			String reason = BungeeBanUtils.getMuteReason(ip);
+			String by = BungeeBanUtils.getWhoMuted(ip);
+			String end = BungeeBanUtils.getRemainingTime(BungeeBanUtils.getMuteEnd(ip));
 			messages = LanguageConfiguration.getStringList("Messages.Mute.MuteMessage");
 			for (String message : messages) {
 				message = ChatColor.translateAlternateColorCodes('&', message);

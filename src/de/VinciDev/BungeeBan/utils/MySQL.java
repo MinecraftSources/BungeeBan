@@ -1,4 +1,4 @@
-package de.vincidev.bungeeban.util;
+package de.vincidev.bungeeban.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.vincidev.bungeeban.Main;
+import de.vincidev.bungeeban.BungeeBan;
 import net.md_5.bungee.BungeeCord;
 
 public class MySQL {
@@ -53,7 +53,7 @@ public class MySQL {
 
 	public void update(String query) {
 		if (isConnected()) {
-			BungeeCord.getInstance().getScheduler().runAsync(Main.getInstance(), new Runnable() {
+			BungeeCord.getInstance().getScheduler().runAsync(BungeeBan.getInstance(), new Runnable() {
 				@Override
 				public void run() {
 					try {

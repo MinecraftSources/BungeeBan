@@ -1,4 +1,4 @@
-package de.vincidev.bungeeban.util;
+package de.vincidev.bungeeban.utils;
 
 import java.util.UUID;
 
