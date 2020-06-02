@@ -1,4 +1,4 @@
-package de.VinciDev.BungeeBan.Util;
+package de.vincidev.bungeeban.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,10 +7,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import de.VinciDev.BungeeBan.Main;
+import de.vincidev.bungeeban.BungeeBan;
 
 public class UpdateChecker {
-	public static boolean updateAvailable(Main instance, String rsID) {
+	public static boolean updateAvailable(BungeeBan instance, String rsID) {
 		int localVersion = Integer.parseInt(instance.getDescription().getVersion().replace(".", ""));
 		try {
 			HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php")

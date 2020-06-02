@@ -1,24 +1,25 @@
-package de.VinciDev.BungeeBan;
+package de.vincidev.bungeeban;
 
 import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import de.VinciDev.BungeeBan.Handlers.PlayerConnect;
-import de.VinciDev.BungeeBan.Metrics.Metrics;
-import de.VinciDev.BungeeBan.Util.BungeeBan;
-import de.VinciDev.BungeeBan.Util.FileManager;
-import de.VinciDev.BungeeBan.Util.MySQL;
-import de.VinciDev.BungeeBan.Util.UpdateChecker;
+import de.vincidev.bungeeban.handlers.BroadcastHandlers;
+import de.vincidev.bungeeban.handlers.PlayerConnect;
+import de.vincidev.bungeeban.metrics.Metrics;
+import de.vincidev.bungeeban.utils.BungeeBanUtils;
+import de.vincidev.bungeeban.utils.FileManager;
+import de.vincidev.bungeeban.utils.MySQL;
+import de.vincidev.bungeeban.utils.UpdateChecker;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
-public class Main extends Plugin {
+public class BungeeBan extends Plugin {
 
 	static String prefix = "";
 	static MySQL mysql;
-	static Main main;
+	static BungeeBan main;
 	static Gson gson;
 	public static final String rsId = "5924";
 
@@ -49,7 +50,7 @@ public class Main extends Plugin {
 			mysql.openConnection();
 			if (mysql.isConnected()) {
 				log("§9Connection successful. Tables will be created if they do not already exist.");
-				BungeeBan.createTables();
+				BungeeBanUtils.createTables();
 			} else {
 				log("§cThe mysql connection was not successful. Please recheck your config.yml");
 			}
@@ -77,6 +78,7 @@ public class Main extends Plugin {
 	public void register() {
 		PluginManager pm = BungeeCord.getInstance().getPluginManager();
 		pm.registerListener(this, new PlayerConnect());
+		pm.registerListener(this, new BroadcastHandlers());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -84,7 +86,7 @@ public class Main extends Plugin {
 		BungeeCord.getInstance().getConsole().sendMessage(msg);
 	}
 
-	public static Main getInstance() {
+	public static BungeeBan getInstance() {
 		return main;
 	}
 
@@ -97,11 +99,11 @@ public class Main extends Plugin {
 	}
 
 	public static void setMysql(MySQL mysql) {
-		Main.mysql = mysql;
+		BungeeBan.mysql = mysql;
 	}
 
 	public static void setPrefix(String prefix) {
-		Main.prefix = prefix;
+		BungeeBan.prefix = prefix;
 	}
 
 	public static Gson getGson() {
